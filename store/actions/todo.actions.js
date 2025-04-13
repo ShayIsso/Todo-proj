@@ -1,0 +1,13 @@
+import { todoService } from "../../services/todo.service.js";
+import { SET_TODOS, store } from "../store.js";
+
+
+export function loadTodos(filterBy) {
+    return todoService.query(filterBy)
+        .then(todos => {
+            store.dispatch({ type: SET_TODOS, todos })})
+        .catch(err => {
+            console.error('car action -> Cannot load cars', err)
+            throw err
+        })
+}
