@@ -12,6 +12,8 @@ const { useSelector } = ReactRedux
 export function TodoIndex() {
 
     const todos = useSelector(storeState => storeState.todos)
+    const isLoading = useSelector(storeState => storeState.isLoading)
+
     // Special hook for accessing search-params:
     const [searchParams, setSearchParams] = useSearchParams()
 
@@ -38,22 +40,22 @@ export function TodoIndex() {
         const todoToSave = { ...todo, isDone: !todo.isDone }
         saveTodo(todoToSave)
             .then((savedTodo) => {
-                showSuccessMsg(`Todo is ${(savedTodo.isDone)? 'done' : 'back on your list'}`)
+                showSuccessMsg(`Todo is ${(savedTodo.isDone) ? 'done' : 'back on your list'}`)
             })
             .catch(() => {
                 showErrorMsg('Cannot update todo')
             })
     }
 
-    if (!todos) return <div>Loading...</div>
     return (
         <section className="todo-index">
             <TodoFilter filterBy={filterBy} onSetFilterBy={setFilterBy} />
             <div>
                 <Link to="/todo/edit" className="btn" >Add Todo</Link>
             </div>
-            <h2>Todos List</h2>
-            <TodoList todos={todos} onRemoveTodo={onRemoveTodo} onToggleTodo={onToggleTodo} />
+            {isLoading 
+                ?  <h1 className="loader">Loading...</h1>
+                : <TodoList todos={todos} onRemoveTodo={onRemoveTodo} onToggleTodo={onToggleTodo} />}
             <hr />
             <h2>Todos Table</h2>
             <div style={{ width: '60%', margin: 'auto' }}>

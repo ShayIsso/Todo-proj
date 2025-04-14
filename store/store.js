@@ -1,20 +1,26 @@
+import { userService } from "../services/user.service.js"
+
 const { createStore, compose } = Redux
 
-//* Todos
+export const SET_IS_LOADING = 'SET_IS_LOADING'
 export const SET_TODOS = 'SET_TODOS'
 export const REMOVE_TODO = 'REMOVE_TODO'
 export const ADD_TODO = 'ADD_TODO'
 export const UPDATE_TODO = 'UPDATE_TODO'
 
+export const SET_USER = 'SET_USER'
+
 const initialState = {
     todos: [],
+    isLoading: false,
+    loggedInUser: userService.getLoggedinUser(),
 }
 
 function appReducer(state = initialState, cmd = {}) {
     switch (cmd.type) {
 
         //* Todos
-        case SET_TODOS: 
+        case SET_TODOS:
             return {
                 ...state,
                 todos: cmd.todos
@@ -37,7 +43,18 @@ function appReducer(state = initialState, cmd = {}) {
                 ...state,
                 todos: state.todos.map(todo => todo._id === cmd.todo._id ? cmd.todo : todo)
             }
-        
+        case SET_IS_LOADING:
+            return {
+                ...state,
+                isLoading: cmd.isLoading
+            }
+
+        //* User
+        case SET_USER:
+            return {
+                ...state,
+                loggedInUser: cmd.user
+            }
         default:
             return state
     }
